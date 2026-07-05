@@ -123,7 +123,7 @@ def parse_gitignore(project_root: Path) -> list[re.Pattern[str]]:
     if not gitignore.exists():
         return patterns
 
-    for line in gitignore.read_text(errors="replace").splitlines():
+    for line in gitignore.read_text(encoding="utf-8", errors="replace").splitlines():
         line = line.strip()
         if not line or line.startswith("#"):
             continue
@@ -208,7 +208,7 @@ def detect_entry_points(root: Path, file_paths: list[str]) -> list[dict[str, Any
             continue
         full_path = root / rel_path
         try:
-            content = full_path.read_text(errors="replace")
+            content = full_path.read_text(encoding="utf-8", errors="replace")
         except (OSError, UnicodeDecodeError):
             continue
 
@@ -267,7 +267,7 @@ def extract_file_signatures(root: Path, file_paths: list[str]) -> list[dict[str,
     for rel_path in sorted_paths[:MAX_SAMPLED_FILES]:
         full_path = root / rel_path
         try:
-            content = full_path.read_text(errors="replace")
+            content = full_path.read_text(encoding="utf-8", errors="replace")
         except (OSError, UnicodeDecodeError):
             continue
 
@@ -312,7 +312,7 @@ def extract_metadata(root: Path) -> dict[str, Any]:
         if not filepath.exists():
             continue
         try:
-            content = filepath.read_text(errors="replace")
+            content = filepath.read_text(encoding="utf-8", errors="replace")
         except (OSError, UnicodeDecodeError):
             continue
 
@@ -415,7 +415,7 @@ def main() -> None:
 
         context = _truncate_to_fit(context)
         output = json.dumps(context, indent=2)
-        output_path.write_text(output)
+        output_path.write_text(output, encoding="utf-8")
         size_kb = len(output.encode()) / 1024
         print(f"  Wrote {output_path} ({size_kb:.0f} KB)", file=sys.stderr)
 
